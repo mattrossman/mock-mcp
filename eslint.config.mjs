@@ -11,6 +11,11 @@ const compat = new FlatCompat({
 
 const eslintConfig = [
   ...compat.extends("next/core-web-vitals", "next/typescript"),
+  {
+    // Note: there should be no other properties in this object
+    // https://eslint.org/docs/latest/use/configure/migration-guide#ignoring-files
+    ignores: ["supabase/*"],
+  },
 ]
 
 export default eslintConfig
