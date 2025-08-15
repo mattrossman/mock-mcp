@@ -3,7 +3,8 @@
   "specifiers": {
     "npm:@hono/mcp@~0.1.1": "0.1.1_@modelcontextprotocol+sdk@1.17.3__express@5.1.0__zod@3.25.76_hono@4.9.2",
     "npm:@modelcontextprotocol/sdk@^1.17.3": "1.17.3_express@5.1.0_zod@3.25.76",
-    "npm:hono@^4.9.2": "4.9.2"
+    "npm:hono@^4.9.2": "4.9.2",
+    "npm:zod@^3.25.76": "3.25.76"
   },
   "npm": {
     "@hono/mcp@0.1.1_@modelcontextprotocol+sdk@1.17.3__express@5.1.0__zod@3.25.76_hono@4.9.2": {
@@ -513,7 +514,8 @@
     "dependencies": [
       "npm:@hono/mcp@~0.1.1",
       "npm:@modelcontextprotocol/sdk@^1.17.3",
-      "npm:hono@^4.9.2"
+      "npm:hono@^4.9.2",
+      "npm:zod@^3.25.76"
     ]
   }
 }
