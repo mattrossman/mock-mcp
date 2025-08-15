@@ -24,16 +24,22 @@ Deno.serve(async (req) => {
     },
   );
 
-  const claims = await supabaseClient.auth.getClaims();
+  const jwt = req.headers.get("Authorization")?.split(" ")[1];
 
-  console.log("Claims:", claims);
+  const { data, error } = await supabaseClient.auth.getClaims(jwt);
 
-  const data = {
-    message: `Check the console`,
+  if (data === null || error !== null) {
+    return new Response("Unauthorized", { status: 401 });
+  }
+
+  const email: string = data.claims["email"];
+
+  const responseData = {
+    message: `Hello ${email}`,
   };
 
   return new Response(
-    JSON.stringify(data),
+    JSON.stringify(responseData),
     { headers: { "Content-Type": "application/json" } },
   );
 });
