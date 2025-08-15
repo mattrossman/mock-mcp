@@ -9,7 +9,7 @@ console.log("Hello from Functions!");
 
 Deno.serve((_req) => {
   const data = {
-    message: `Hello world}!`,
+    message: `Hello GitHub Actions}!`,
   };
 
   return new Response(
