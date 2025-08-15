@@ -1,5 +1,3 @@
-
-
 ## Setup
 
 Install dependencies
@@ -30,7 +28,6 @@ Stop containers
 pnpm supabase:stop
 ```
 
-
 ## Reference
-- https://supabase.com/docs/reference/cli
 
+- https://supabase.com/docs/reference/cli
