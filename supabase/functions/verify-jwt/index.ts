@@ -10,26 +10,36 @@ import { createClient } from "@supabase/supabase-js";
 console.log("Hello from Functions!");
 
 Deno.serve(async (req) => {
+  const authorization = req.headers.get("Authorization");
+  if (authorization === null) {
+    return new Response("Unauthorized", { status: 401 });
+  }
+
+  const accessToken = authorization.split(" ").at(1);
+  if (accessToken === null) {
+    return new Response("Unauthorized", { status: 401 });
+  }
+
   const supabaseClient = createClient(
-    // Supabase API URL - env var exported by default.
     Deno.env.get("SUPABASE_URL") ?? "",
-    // Supabase API ANON KEY - env var exported by default.
     Deno.env.get("SUPABASE_ANON_KEY") ?? "",
-    // Create client with Auth context of the user that called the function.
-    // This way your row-level-security (RLS) policies are applied.
     {
       global: {
-        headers: { Authorization: req.headers.get("Authorization")! },
+        headers: { Authorization: authorization },
       },
     },
   );
 
-  const jwt = req.headers.get("Authorization")?.split(" ")[1];
-
-  const { data, error } = await supabaseClient.auth.getClaims(jwt);
+  const { data, error } = await supabaseClient.auth.getClaims(accessToken, {
+    allowExpired: true,
+  });
 
   if (data === null || error !== null) {
-    return new Response("Unauthorized", { status: 401 });
+    console.log(error?.message);
+    const message = error?.message ?? "Unauthorized";
+    return new Response(message, {
+      status: 401,
+    });
   }
 
   const email: string = data.claims["email"];
