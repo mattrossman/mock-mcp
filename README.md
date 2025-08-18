@@ -20,6 +20,13 @@ Serve functions
 pnpm supabase:functions
 ```
 
+Serve frontend
+
+```bash
+pnpm dev
+```
+
+
 ## Cleanup
 
 Stop containers

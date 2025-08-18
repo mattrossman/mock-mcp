@@ -5,6 +5,8 @@
 // Setup type definitions for built-in Supabase Runtime APIs
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 
+import type { Database } from "../../../database.types.ts";
+
 import { createClient } from "@supabase/supabase-js";
 
 console.log("Hello from Functions!");
@@ -12,15 +14,10 @@ console.log("Hello from Functions!");
 Deno.serve(async (req) => {
   const authorization = req.headers.get("Authorization");
   if (authorization === null) {
-    return new Response("Unauthorized", { status: 401 });
+    return new Response(`Missing "Authorization" header`, { status: 401 });
   }
 
-  const accessToken = authorization.split(" ").at(1);
-  if (accessToken === null) {
-    return new Response("Unauthorized", { status: 401 });
-  }
-
-  const supabaseClient = createClient(
+  const supabaseClient = createClient<Database>(
     Deno.env.get("SUPABASE_URL") ?? "",
     Deno.env.get("SUPABASE_ANON_KEY") ?? "",
     {
@@ -30,22 +27,33 @@ Deno.serve(async (req) => {
     },
   );
 
-  const { data, error } = await supabaseClient.auth.getClaims(accessToken, {
-    allowExpired: true,
-  });
+  const $user = await supabaseClient.auth.getUser();
 
-  if (data === null || error !== null) {
-    console.log(error?.message);
-    const message = error?.message ?? "Unauthorized";
+  if ($user.data === null || $user.error !== null) {
+    const message = $user.error?.message ?? "Unauthorized";
     return new Response(message, {
       status: 401,
     });
   }
 
-  const email: string = data.claims["email"];
+  const email = $user.data.user.email ?? "(missing email)";
+
+  const userId = $user.data.user.id;
+
+  const $servers = await supabaseClient.from("servers").select("name, id").eq(
+    "user_id",
+    userId,
+  );
+
+  console.log($servers);
+
+  if ($servers.error) {
+    throw new Error($servers.error.message);
+  }
 
   const responseData = {
-    message: `Hello ${email}`,
+    email: `Hello ${email}`,
+    servers: $servers.data,
   };
 
   return new Response(
@@ -53,15 +61,3 @@ Deno.serve(async (req) => {
     { headers: { "Content-Type": "application/json" } },
   );
 });
-
-/* To invoke locally:
-
-  1. Run `supabase start` (see: https://supabase.com/docs/reference/cli/supabase-start)
-  2. Make an HTTP request:
-
-  curl -i --location --request POST 'http://127.0.0.1:54321/functions/v1/verify-jwt' \
-    --header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0' \
-    --header 'Content-Type: application/json' \
-    --data '{"name":"Functions"}'
-
-*/
