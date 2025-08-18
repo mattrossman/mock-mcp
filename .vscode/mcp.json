@@ -1,0 +1,18 @@
+{
+  "servers": {
+    "Hello MCP Handler": {
+      "url": "http://127.0.0.1:54321/functions/v1/hello-mcp-handler/mcp",
+      "type": "http",
+      "headers": {
+        "Authorization": "Bearer ${input:mock-mcp-access-token}"
+      }
+    }
+  },
+  "inputs": [
+    {
+      "type": "promptString",
+      "id": "mock-mcp-access-token",
+      "description": "Access token copied from MockMCP frontend"
+    }
+  ]
+}
