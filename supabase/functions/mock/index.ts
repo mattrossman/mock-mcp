@@ -42,12 +42,23 @@ Deno.serve(async (req) => {
     });
   }
 
+  const userId = $user.data.user.id;
+
+  const $servers = await client.from("servers").select("name, id").eq(
+    "user_id",
+    userId,
+  );
+
+  if ($servers.error) {
+    throw new Error($servers.error.message);
+  }
+
   // Configure MCP server
 
   const handler = createMcpHandler(
     (server) => {
       server.tool(
-        "user_email",
+        "get_email",
         "Gets the email of the authenticated user",
         {},
         () => {
@@ -55,6 +66,20 @@ Deno.serve(async (req) => {
             content: [{
               type: "text",
               text: `${$user.data.user.email ?? "(missing email)"}`,
+            }],
+          };
+        },
+      );
+
+      server.tool(
+        "get_servers",
+        "Gets the mock servers configured by the authenticated user",
+        {},
+        () => {
+          return {
+            content: [{
+              type: "text",
+              text: `${JSON.stringify($servers.data)}`,
             }],
           };
         },
