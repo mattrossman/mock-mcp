@@ -1,0 +1,9 @@
+{
+  "imports": {
+    "@/": "../../../",
+    "@modelcontextprotocol/sdk": "npm:@modelcontextprotocol/sdk@^1.17.3",
+    "@supabase/supabase-js": "npm:@supabase/supabase-js@^2.55.0",
+    "mcp-handler": "npm:mcp-handler@^1.0.1",
+    "zod": "npm:zod@^3.25.76"
+  }
+}

@@ -5,19 +5,23 @@
 // Setup type definitions for built-in Supabase Runtime APIs
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 
+import { createClient } from "@supabase/supabase-js";
+import { createMcpHandler } from "mcp-handler";
+import { z } from "zod";
+
 import type { Database } from "@/database.types.ts";
 
-import { createClient } from "@supabase/supabase-js";
-
-console.log("Hello from Functions!");
+const FUNCTION_NAME = "mock";
 
 Deno.serve(async (req) => {
+  // Configure Supabase client
+
   const authorization = req.headers.get("Authorization");
   if (authorization === null) {
     return new Response(`Missing "Authorization" header`, { status: 401 });
   }
 
-  const supabaseClient = createClient<Database>(
+  const client = createClient<Database>(
     Deno.env.get("SUPABASE_URL") ?? "",
     Deno.env.get("SUPABASE_ANON_KEY") ?? "",
     {
@@ -27,7 +31,9 @@ Deno.serve(async (req) => {
     },
   );
 
-  const $user = await supabaseClient.auth.getUser();
+  // Authenticate user
+
+  const $user = await client.auth.getUser();
 
   if ($user.data === null || $user.error !== null) {
     const message = $user.error?.message ?? "Unauthorized";
@@ -36,28 +42,32 @@ Deno.serve(async (req) => {
     });
   }
 
-  const email = $user.data.user.email ?? "(missing email)";
+  // Configure MCP server
 
-  const userId = $user.data.user.id;
+  const handler = createMcpHandler(
+    (server) => {
+      server.tool(
+        "user_email",
+        "Gets the email of the authenticated user",
+        {},
+        () => {
+          return {
+            content: [{
+              type: "text",
+              text: `${$user.data.user.email ?? "(missing email)"}`,
+            }],
+          };
+        },
+      );
 
-  const $servers = await supabaseClient.from("servers").select("name, id").eq(
-    "user_id",
-    userId,
+      // TODO: Dynamically add tools from DB
+    },
+    {},
+    {
+      basePath: `/${FUNCTION_NAME}`,
+      disableSse: true,
+    },
   );
 
-  console.log($servers);
-
-  if ($servers.error) {
-    throw new Error($servers.error.message);
-  }
-
-  const responseData = {
-    email: `Hello ${email}`,
-    servers: $servers.data,
-  };
-
-  return new Response(
-    JSON.stringify(responseData),
-    { headers: { "Content-Type": "application/json" } },
-  );
+  return await handler(req);
 });
