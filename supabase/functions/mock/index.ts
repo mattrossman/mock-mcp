@@ -16,24 +16,28 @@ const FUNCTION_NAME = "mock";
 Deno.serve(async (req) => {
   // Configure Supabase client
 
-  const authorization = req.headers.get("Authorization");
-  if (authorization === null) {
+  const authHeader = req.headers.get("Authorization");
+  if (authHeader === null) {
     return new Response(`Missing "Authorization" header`, { status: 401 });
   }
+
+  const token = authHeader.replace("Bearer ", "");
 
   const client = createClient<Database>(
     Deno.env.get("SUPABASE_URL") ?? "",
     Deno.env.get("SUPABASE_ANON_KEY") ?? "",
     {
       global: {
-        headers: { Authorization: authorization },
+        headers: { Authorization: authHeader },
       },
     },
   );
 
   // Authenticate user
 
-  const $user = await client.auth.getUser();
+  const $user = await client.auth.getClaims(token, {
+    allowExpired: true, // Still validates expiry, but populates `error` channel instead of throwing an exception
+  });
 
   if ($user.data === null || $user.error !== null) {
     const message = $user.error?.message ?? "Unauthorized";
@@ -42,9 +46,16 @@ Deno.serve(async (req) => {
     });
   }
 
-  const userId = $user.data.user.id;
+  // Parse query params
 
-  const $servers = await client.from("servers").select(`
+  const url = new URL(req.url);
+  const serverId = url.searchParams.get("serverId");
+
+  if (serverId === null) {
+    return new Response(`Missing "serverId" query parameter`, { status: 400 });
+  }
+
+  const $server = await client.from("servers").select(`
     id,
     name,
     tools (
@@ -55,48 +66,42 @@ Deno.serve(async (req) => {
         name
       )
     )
-  `).eq(
-    "user_id",
-    userId,
-  );
+  `)
+    .eq("id", serverId)
+    .single();
 
-  if ($servers.error) {
-    throw new Error($servers.error.message);
+  if ($server.error) {
+    throw new Error($server.error.message);
   }
 
   // Configure MCP server
 
   const handler = createMcpHandler(
     (server) => {
-      server.tool(
-        "get_email",
-        "Gets the email of the authenticated user",
-        {},
-        () => {
-          return {
-            content: [{
-              type: "text",
-              text: `${$user.data.user.email ?? "(missing email)"}`,
-            }],
-          };
-        },
-      );
+      for (const tool of $server.data.tools) {
+        const description = `Mock tool: ${tool.name}`;
 
-      server.tool(
-        "get_servers",
-        "Gets the mock servers configured by the authenticated user",
-        {},
-        () => {
-          return {
-            content: [{
-              type: "text",
-              text: `${JSON.stringify($servers.data)}`,
-            }],
-          };
-        },
-      );
+        const paramsSchema = Object.fromEntries(
+          tool.parameters.map((p) => [p.name, z.string()]),
+        );
 
-      // TODO: Dynamically add tools from DB
+        server.tool(
+          tool.name,
+          description,
+          paramsSchema,
+          (params) => {
+            // Simulate a mock response
+            return {
+              content: [{
+                type: "text",
+                text: `Mock response for tool "${tool.name}" with params: ${
+                  JSON.stringify(params)
+                }`,
+              }],
+            };
+          },
+        );
+      }
     },
     {},
     {
