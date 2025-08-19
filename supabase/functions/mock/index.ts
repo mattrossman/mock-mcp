@@ -44,7 +44,18 @@ Deno.serve(async (req) => {
 
   const userId = $user.data.user.id;
 
-  const $servers = await client.from("servers").select("name, id").eq(
+  const $servers = await client.from("servers").select(`
+    id,
+    name,
+    tools (
+      id,
+      name,
+      parameters (
+        id,
+        name
+      )
+    )
+  `).eq(
     "user_id",
     userId,
   );
