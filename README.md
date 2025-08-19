@@ -26,7 +26,6 @@ Serve frontend
 pnpm dev
 ```
 
-
 ## Cleanup
 
 Stop containers
