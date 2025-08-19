@@ -10,10 +10,11 @@ enable row level security;
 -- https://supabase.com/docs/guides/database/postgres/row-level-security#policies
 create policy "Users can view their own servers."
 on servers for select
-using ( (select auth.uid()) = user_id );
+to authenticated
+using ( auth.uid() = user_id );
 
 -- https://supabase.com/docs/guides/database/postgres/row-level-security#insert-policies
 create policy "Users can create a server."
 on servers for insert
 to authenticated
-with check ( (select auth.uid()) = user_id );
+with check ( auth.uid() = user_id );
