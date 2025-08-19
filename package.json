@@ -10,6 +10,8 @@
     "supabase:start": "supabase start",
     "supabase:stop": "supabase stop",
     "supabase:functions": "supabase functions serve",
+    "supabase:gen": "supabase gen types typescript --local > database.types.ts",
+    "supabase:apply-migrations": "supabase migration up --local",
     "mcp:inspector": "mcp-inspector"
   },
   "dependencies": {

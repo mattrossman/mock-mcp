@@ -34,6 +34,35 @@ export type Database = {
   }
   public: {
     Tables: {
+      parameters: {
+        Row: {
+          id: string
+          name: string
+          tool_id: string
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          name: string
+          tool_id: string
+          user_id: string
+        }
+        Update: {
+          id?: string
+          name?: string
+          tool_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "parameters_tool_id_fkey"
+            columns: ["tool_id"]
+            isOneToOne: false
+            referencedRelation: "tools"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       servers: {
         Row: {
           id: string
@@ -51,6 +80,35 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      tools: {
+        Row: {
+          id: string
+          name: string
+          server_id: string
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          name: string
+          server_id: string
+          user_id: string
+        }
+        Update: {
+          id?: string
+          name?: string
+          server_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tools_server_id_fkey"
+            columns: ["server_id"]
+            isOneToOne: false
+            referencedRelation: "servers"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
