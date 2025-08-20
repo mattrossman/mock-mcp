@@ -1,7 +1,8 @@
 create table servers (
   id uuid primary key default uuid_generate_v4(),
   user_id uuid not null default auth.uid() references auth.users on delete cascade,
-  name text not null
+  name text not null,
+  created_at timestamptz not null default now()
 );
 
 alter table "servers"
