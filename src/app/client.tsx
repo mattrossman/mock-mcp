@@ -2,10 +2,11 @@
 
 import { CopyButton } from "@/components/copy-button"
 import { Button } from "@/components/ui/button"
-import { Link, Plus } from "lucide-react"
+import { Link as LinkIcon, Plus } from "lucide-react"
 import { Database } from "../../database.types"
 import { createClient } from "@/lib/supabase/client"
 import { useRouter } from "next/navigation"
+import Link from "next/link"
 
 export function ServerCard({
   server,
@@ -27,10 +28,12 @@ export function ServerCard({
         <CopyButton
           label="Copy URL"
           variant="outline"
-          defaultIcon={<Link />}
+          defaultIcon={<LinkIcon />}
           text={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/functions/v1/mock/mcp?serverId=${server.id}`}
         />
-        <Button variant="outline">Edit</Button>
+        <Button variant="outline" asChild>
+          <Link href={`/${server.id}`}>Edit</Link>
+        </Button>
         <Button variant="destructive" onClick={() => handleDelete(server.id)}>
           Delete
         </Button>
