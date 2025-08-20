@@ -42,8 +42,8 @@ export default async function ProtectedPage() {
 
   return (
     <div className="py-20">
-      <header className="flex">
-        <h1 className="text-2xl font-bold mb-10 grow">Servers</h1>
+      <header className="flex mb-10 items-center">
+        <h1 className="text-2xl font-bold grow">Servers</h1>
         <AddServerButton />
       </header>
 

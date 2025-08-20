@@ -62,16 +62,19 @@ export type Database = {
       }
       servers: {
         Row: {
+          created_at: string
           id: string
           name: string
           user_id: string
         }
         Insert: {
+          created_at?: string
           id?: string
           name: string
           user_id?: string
         }
         Update: {
+          created_at?: string
           id?: string
           name?: string
           user_id?: string
@@ -80,16 +83,19 @@ export type Database = {
       }
       tools: {
         Row: {
+          description: string
           id: string
           name: string
           server_id: string
         }
         Insert: {
+          description?: string
           id?: string
           name: string
           server_id: string
         }
         Update: {
+          description?: string
           id?: string
           name?: string
           server_id?: string

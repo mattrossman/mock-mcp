@@ -6,6 +6,7 @@ import { CodeBlock } from "@/components/code-block"
 import { Button } from "@/components/ui/button"
 import { getServerUrl } from "@/lib/get-server-url"
 import { createClient } from "@/lib/supabase/server"
+import { ToolSection } from "@/app/[serverId]/client"
 
 export default async function Page({
   params,
@@ -18,7 +19,7 @@ export default async function Page({
 
   const $server = await client
     .from("servers")
-    .select("*")
+    .select("*, tools(*)")
     .eq("id", serverId)
     .single()
 
@@ -43,13 +44,11 @@ export default async function Page({
         </div>
 
         <h1 className="text-2xl font-bold mb-10 grow">{server.name}</h1>
-
-        <CodeBlock label="URL" code={getServerUrl(server.id)} />
-
-        <section className="mt-10">
-          <h1 className="text-2xl font-bold mb-10">Tools</h1>
-        </section>
       </header>
+
+      <CodeBlock label="URL" code={getServerUrl(server.id)} />
+
+      <ToolSection serverId={server.id} tools={server.tools} />
     </div>
   )
 }

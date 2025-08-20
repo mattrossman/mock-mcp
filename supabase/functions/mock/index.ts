@@ -55,18 +55,9 @@ Deno.serve(async (req) => {
     return new Response(`Missing "serverId" query parameter`, { status: 400 });
   }
 
-  const $server = await client.from("servers").select(`
-    id,
-    name,
-    tools (
-      id,
-      name,
-      parameters (
-        id,
-        name
-      )
-    )
-  `)
+  const $server = await client.from("servers").select(
+    `*, tools(*, parameters(*))`,
+  )
     .eq("id", serverId)
     .single();
 
@@ -79,15 +70,13 @@ Deno.serve(async (req) => {
   const handler = createMcpHandler(
     (server) => {
       for (const tool of $server.data.tools) {
-        const description = `Mock tool: ${tool.name}`;
-
         const paramsSchema = Object.fromEntries(
           tool.parameters.map((p) => [p.name, z.string()]),
         );
 
         server.tool(
           tool.name,
-          description,
+          tool.description,
           paramsSchema,
           (params) => {
             // Simulate a mock response
