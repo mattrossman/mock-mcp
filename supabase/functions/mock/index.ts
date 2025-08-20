@@ -73,7 +73,7 @@ Deno.serve(async (req) => {
         "debug",
         "For debugging",
         {
-          string: z.string(),
+          string: z.string().describe("A string"),
           number: z.number(),
           email: z.string().email(),
           enum: z.enum(["red", "green", "blue"]),
@@ -92,7 +92,11 @@ Deno.serve(async (req) => {
 
       for (const tool of $server.data.tools) {
         const paramsSchema = Object.fromEntries(
-          tool.parameters.map((p) => [p.name, z.string()]),
+          tool.parameters.map((p) => {
+            const schema = z[p.type]();
+            const schemaWithDescription = schema.describe(p.description);
+            return [p.name, schemaWithDescription];
+          }),
         );
 
         server.tool(

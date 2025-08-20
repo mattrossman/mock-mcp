@@ -1,7 +1,14 @@
+create type parameter_type as enum (
+  'string',
+  'number'
+);
+
 create table parameters (
   id uuid primary key default uuid_generate_v4(),
   tool_id uuid not null references tools(id) on delete cascade,
-  name text not null
+  name text not null,
+  description text not null,
+  type parameter_type not null
 );
 
 alter table "parameters"

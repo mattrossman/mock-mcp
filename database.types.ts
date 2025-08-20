@@ -36,19 +36,25 @@ export type Database = {
     Tables: {
       parameters: {
         Row: {
+          description: string
           id: string
           name: string
           tool_id: string
+          type: Database["public"]["Enums"]["parameter_type"]
         }
         Insert: {
+          description: string
           id?: string
           name: string
           tool_id: string
+          type: Database["public"]["Enums"]["parameter_type"]
         }
         Update: {
+          description?: string
           id?: string
           name?: string
           tool_id?: string
+          type?: Database["public"]["Enums"]["parameter_type"]
         }
         Relationships: [
           {
@@ -118,7 +124,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      parameter_type: "string" | "number"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -248,7 +254,9 @@ export const Constants = {
     Enums: {},
   },
   public: {
-    Enums: {},
+    Enums: {
+      parameter_type: ["string", "number"],
+    },
   },
 } as const
 
