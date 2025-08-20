@@ -1,12 +1,13 @@
 "use client"
+import { Link as LinkIcon, Plus } from "lucide-react"
+import Link from "next/link"
+import { useRouter } from "next/navigation"
 
 import { CopyButton } from "@/components/copy-button"
 import { Button } from "@/components/ui/button"
-import { Link as LinkIcon, Plus } from "lucide-react"
-import { Database } from "../../database.types"
+import { getServerUrl } from "@/lib/get-server-url"
 import { createClient } from "@/lib/supabase/client"
-import { useRouter } from "next/navigation"
-import Link from "next/link"
+import { Database } from "../../database.types"
 
 export function ServerCard({
   server,
@@ -29,7 +30,7 @@ export function ServerCard({
           label="Copy URL"
           variant="outline"
           defaultIcon={<LinkIcon />}
-          text={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/functions/v1/mock/mcp?serverId=${server.id}`}
+          text={getServerUrl(server.id)}
         />
         <Button variant="outline" asChild>
           <Link href={`/${server.id}`}>Edit</Link>
