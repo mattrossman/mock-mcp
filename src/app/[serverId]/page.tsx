@@ -8,10 +8,10 @@ import { getServerUrl } from "@/lib/get-server-url"
 import { createClient } from "@/lib/supabase/server"
 import { ToolSection } from "@/app/[serverId]/client"
 
-export default async function Page({
+export default async function ServerPage({
   params,
 }: {
-  params: { serverId: string }
+  params: Promise<{ serverId: string }>
 }) {
   const client = await createClient()
 

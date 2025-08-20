@@ -69,6 +69,27 @@ Deno.serve(async (req) => {
 
   const handler = createMcpHandler(
     (server) => {
+      server.tool(
+        "debug",
+        "For debugging",
+        {
+          string: z.string(),
+          number: z.number(),
+          email: z.string().email(),
+          enum: z.enum(["red", "green", "blue"]),
+        },
+        (params) => {
+          return {
+            content: [{
+              type: "text",
+              text: `Mock response for tool "debug" with params: ${
+                JSON.stringify(params)
+              }`,
+            }],
+          };
+        },
+      );
+
       for (const tool of $server.data.tools) {
         const paramsSchema = Object.fromEntries(
           tool.parameters.map((p) => [p.name, z.string()]),

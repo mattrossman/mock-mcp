@@ -3,7 +3,7 @@ import { redirect } from "next/navigation"
 import { AddServerButton, ServerCard } from "@/app/client"
 import { createClient } from "@/lib/supabase/server"
 
-export default async function ProtectedPage() {
+export default async function IndexPage() {
   const supabase = await createClient()
 
   const { data, error } = await supabase.auth.getClaims()
