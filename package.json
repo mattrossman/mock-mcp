@@ -12,7 +12,8 @@
     "supabase:functions": "supabase functions serve",
     "supabase:gen": "supabase gen types typescript --local > database.types.ts",
     "supabase:apply-migrations": "supabase migration up --local",
-    "mcp:inspector": "mcp-inspector"
+    "mcp:inspector": "mcp-inspector",
+    "format": "prettier --write ."
   },
   "dependencies": {
     "@radix-ui/react-label": "^2.1.7",

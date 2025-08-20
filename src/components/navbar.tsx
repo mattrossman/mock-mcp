@@ -4,21 +4,28 @@ import Image from "next/image"
 import { createClient } from "@/lib/supabase/server"
 import { cn } from "@/lib/utils"
 import z from "zod"
+import { CopyToken } from "@/components/copy-token"
 
 const ClaimsSchema = z.object({
   email: z.string().email(),
 })
 
 export async function Navbar({ className }: { className?: string }) {
-  const client = await createClient()
+  const supabase = await createClient()
 
-  const { data, error } = await client.auth.getClaims()
+  const $claims = await supabase.auth.getClaims()
+  const $session = await supabase.auth.getSession()
+
+  const accessToken = $session.data.session?.access_token
 
   const getUserData = () => {
-    if (data) {
-      const parsed = ClaimsSchema.safeParse(data.claims)
-      if (parsed.success) {
-        return parsed.data
+    if ($claims.data && accessToken) {
+      const claims = ClaimsSchema.safeParse($claims.data.claims)
+      if (claims.success) {
+        return {
+          email: claims.data.email,
+          accessToken,
+        }
       }
     }
     return null
@@ -35,8 +42,9 @@ export async function Navbar({ className }: { className?: string }) {
 
       {userData && (
         <div className="flex gap-6 items-center">
+          <CopyToken token={userData.accessToken} />
           <span className="text-muted-foreground text-sm">
-            Logged in as <strong>{userData.email}</strong>
+            {userData.email}
           </span>
           <LogoutButton />
         </div>
