@@ -11,14 +11,17 @@
     "supabase:stop": "supabase stop",
     "supabase:functions": "supabase functions serve",
     "supabase:gen": "supabase gen types typescript --local > database.types.ts",
-    "supabase:apply-migrations": "supabase migration up --local",
+    "supabase:apply-migrations": "supabase migration up --local && pnpm supabase:gen",
     "mcp:inspector": "mcp-inspector",
     "format": "prettier --write ."
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.1",
+    "@radix-ui/react-accordion": "^1.2.12",
+    "@radix-ui/react-collapsible": "^1.1.12",
     "@radix-ui/react-dialog": "^1.1.15",
     "@radix-ui/react-label": "^2.1.7",
+    "@radix-ui/react-separator": "^1.1.7",
     "@radix-ui/react-slot": "^1.2.3",
     "@supabase/ssr": "^0.6.1",
     "@supabase/supabase-js": "^2.55.0",

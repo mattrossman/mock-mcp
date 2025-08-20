@@ -74,6 +74,7 @@ Deno.serve(async (req) => {
         "For debugging",
         {
           string: z.string().describe("A string"),
+          boolean: z.boolean().describe("A boolean"),
           number: z.number(),
           email: z.string().email(),
           enum: z.enum(["red", "green", "blue"]),

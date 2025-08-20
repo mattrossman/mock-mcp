@@ -124,7 +124,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      parameter_type: "string" | "number"
+      parameter_type: "string" | "number" | "boolean"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -255,7 +255,7 @@ export const Constants = {
   },
   public: {
     Enums: {
-      parameter_type: ["string", "number"],
+      parameter_type: ["string", "number", "boolean"],
     },
   },
 } as const

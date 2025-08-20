@@ -1,6 +1,7 @@
 create type parameter_type as enum (
   'string',
-  'number'
+  'number',
+  'boolean'
 );
 
 create table parameters (
