@@ -39,19 +39,16 @@ export type Database = {
           id: string
           name: string
           tool_id: string
-          user_id: string
         }
         Insert: {
           id?: string
           name: string
           tool_id: string
-          user_id: string
         }
         Update: {
           id?: string
           name?: string
           tool_id?: string
-          user_id?: string
         }
         Relationships: [
           {
@@ -72,7 +69,7 @@ export type Database = {
         Insert: {
           id?: string
           name: string
-          user_id: string
+          user_id?: string
         }
         Update: {
           id?: string
@@ -86,19 +83,16 @@ export type Database = {
           id: string
           name: string
           server_id: string
-          user_id: string
         }
         Insert: {
           id?: string
           name: string
           server_id: string
-          user_id: string
         }
         Update: {
           id?: string
           name?: string
           server_id?: string
-          user_id?: string
         }
         Relationships: [
           {
@@ -251,3 +245,4 @@ export const Constants = {
     Enums: {},
   },
 } as const
+

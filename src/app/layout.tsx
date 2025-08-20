@@ -27,20 +27,20 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <ThemeProvider
-        attribute="class"
-        defaultTheme="dark"
-        disableTransitionOnChange
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased h-svh`}
       >
-        <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased h-svh`}
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          disableTransitionOnChange
         >
           <Navbar className="fixed h-16 px-8" />
           <main className="mx-auto max-w-4xl min-h-full h-full px-4 pt-16">
             {children}
           </main>
-        </body>
-      </ThemeProvider>
+        </ThemeProvider>
+      </body>
     </html>
   )
 }

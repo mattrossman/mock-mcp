@@ -1,8 +1,7 @@
 import { redirect } from "next/navigation"
 
-import { LogoutButton } from "@/components/logout-button"
+import { AddServerButton, ServerCard } from "@/app/client"
 import { createClient } from "@/lib/supabase/server"
-import { CodeBlock } from "@/components/code-block"
 
 export default async function ProtectedPage() {
   const supabase = await createClient()
@@ -12,32 +11,43 @@ export default async function ProtectedPage() {
     redirect("/auth/login")
   }
 
-  const session = await supabase.auth.getSession()
-
-  const userId = session.data.session?.user.id
-  if (userId === undefined) throw new Error("User ID is undefined")
-
   const $servers = await supabase
     .from("servers")
     .select("*")
-    .eq("user_id", userId)
+    .eq("user_id", data.claims.sub)
+
+  const renderServers = () => {
+    if ($servers.error) {
+      return <p>Error loading servers: {$servers.error.message}</p>
+    }
+
+    if ($servers.data.length === 0) {
+      return (
+        <p className="text-center text-muted-foreground">
+          Add a server to get started
+        </p>
+      )
+    }
+
+    return (
+      <ul className="grid gap-4">
+        {$servers.data.map((server) => (
+          <li key={server.id}>
+            <ServerCard server={server} />
+          </li>
+        ))}
+      </ul>
+    )
+  }
 
   return (
-    <div className="grid w-full gap-2">
-      <div className="max-w-xl">
-        <CodeBlock
-          code={session.data.session?.access_token ?? ""}
-          label="access_token"
-        />
-        <h2>Servers</h2>
-        {$servers.data?.map((server) => (
-          <CodeBlock
-            key={server.id}
-            code={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/functions/v1/mock/mcp?serverId=${server.id}`}
-            label={server.name}
-          />
-        ))}
-      </div>
+    <div className="py-12">
+      <header className="flex">
+        <h1 className="text-2xl font-bold mb-10 grow">Servers</h1>
+        <AddServerButton />
+      </header>
+
+      {renderServers()}
     </div>
   )
 }
