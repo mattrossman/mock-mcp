@@ -24,12 +24,6 @@ export default async function ProtectedPage() {
 
   return (
     <div className="grid w-full gap-2">
-      <div className="flex gap-2 items-center">
-        <p>
-          Hello <span>{data.claims.email}</span>
-        </p>
-        <LogoutButton />
-      </div>
       <div className="max-w-xl">
         <CodeBlock
           code={session.data.session?.access_token ?? ""}
