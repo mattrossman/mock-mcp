@@ -95,7 +95,6 @@ Deno.serve(async (req) => {
                 Usually this will be plain text, but it could contain JSON.
               `,
               prompt: JSON.stringify({
-                server_name: $server.data.name,
                 tool_name: tool.name,
                 tool_description: tool.description,
                 tool_parameters: tool.parameters.map((parameter) => {
