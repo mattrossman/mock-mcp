@@ -10,6 +10,17 @@ import { useForm } from "react-hook-form"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
+import {
   Dialog,
   DialogContent,
   DialogDescription,
@@ -117,9 +128,36 @@ export function ServerCard({
           <Button variant="outline" asChild>
             <Link href={`/${server.id}`}>Manage</Link>
           </Button>
-          <Button variant="destructive" onClick={() => handleDelete(server.id)}>
-            Delete
-          </Button>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button variant="destructive">Delete</Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Confirm Server Deletion</AlertDialogTitle>
+                <AlertDialogDescription className="space-y-2">
+                  <p>
+                    Are you sure you want to delete the server{" "}
+                    <strong>{server.name}</strong>?
+                  </p>
+                  {server.tools.length > 0 ? (
+                    <p>
+                      This will also delete {server.tools.length} tool
+                      {server.tools.length === 1 ? "" : "s"}.
+                    </p>
+                  ) : (
+                    <p>This server has no tools.</p>
+                  )}
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction onClick={() => handleDelete(server.id)}>
+                  Delete Server
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </div>
       </div>
     </div>
