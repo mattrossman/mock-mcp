@@ -13,7 +13,7 @@ export default async function IndexPage() {
 
   const $servers = await supabase
     .from("servers")
-    .select("*")
+    .select("*, tools(name)")
     .eq("user_id", data.claims.sub)
 
   const renderServers = () => {
