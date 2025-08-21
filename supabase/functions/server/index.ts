@@ -14,7 +14,7 @@ import dedent from "dedent";
 
 import type { Database } from "@/database.types.ts";
 
-const FUNCTION_NAME = "mock";
+const FUNCTION_NAME = "server";
 
 Deno.serve(async (req) => {
   // Configure Supabase client
@@ -52,10 +52,10 @@ Deno.serve(async (req) => {
   // Parse query params
 
   const url = new URL(req.url);
-  const serverId = url.searchParams.get("serverId");
+  const serverId = url.pathname.split("/").at(2);
 
-  if (serverId === null) {
-    return new Response(`Missing "serverId" query parameter`, { status: 400 });
+  if (serverId === undefined) {
+    return new Response(`Missing "serverId" in path`, { status: 400 });
   }
 
   const $server = await client.from("servers").select(
@@ -121,7 +121,7 @@ Deno.serve(async (req) => {
     },
     {},
     {
-      basePath: `/${FUNCTION_NAME}`,
+      basePath: `/${FUNCTION_NAME}/${serverId}`,
       disableSse: true,
     },
   );

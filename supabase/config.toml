@@ -388,13 +388,13 @@ entrypoint = "./functions/verify-jwt/index.ts"
 # For example, if you want to serve static HTML pages in your function:
 # static_files = [ "./functions/verify-jwt/*.html" ]
 
-[functions.mock]
+[functions.server]
 enabled = true
 verify_jwt = false
-import_map = "./functions/mock/deno.json"
+import_map = "./functions/server/deno.json"
 # Uncomment to specify a custom file path to the entrypoint.
 # Supported file extensions are: .ts, .js, .mjs, .jsx, .tsx
-entrypoint = "./functions/mock/index.ts"
+entrypoint = "./functions/server/index.ts"
 # Specifies static files to be bundled with the function. Supports glob patterns.
 # For example, if you want to serve static HTML pages in your function:
-# static_files = [ "./functions/mock/*.html" ]
+# static_files = [ "./functions/server/*.html" ]

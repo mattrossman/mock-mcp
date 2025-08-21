@@ -171,7 +171,11 @@ export function ToolForm({
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            autoComplete="off"
+            className="space-y-8"
+          >
             <FormField
               control={form.control}
               name="name"
@@ -393,7 +397,11 @@ export function ParameterForm({
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            autoComplete="off"
+            className="space-y-8"
+          >
             <FormField
               control={form.control}
               name="name"
@@ -521,7 +529,11 @@ export function ConnectDialog({
         </DialogHeader>
 
         <div className="grid gap-6">
-          <CodeBlock className="min-w-0" code={serverUrl} label="URL" />
+          <CodeBlock
+            className="min-w-0"
+            code={serverUrl}
+            label="URL (Streamable HTTP)"
+          />
 
           <CodeBlock
             className="min-w-0"
@@ -638,7 +650,11 @@ export function ServerForm({
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            autoComplete="off"
+            className="space-y-8"
+          >
             <FormField
               control={form.control}
               name="name"

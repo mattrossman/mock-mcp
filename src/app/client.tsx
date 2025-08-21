@@ -167,7 +167,11 @@ export function ServerForm({
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            autoComplete="off"
+            className="space-y-8"
+          >
             <FormField
               control={form.control}
               name="name"
