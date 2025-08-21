@@ -114,13 +114,19 @@ export function ToolSection({
         </Button>
       </header>
 
-      <ul className="grid gap-4">
-        {tools.map((tool) => (
-          <li key={tool.id}>
-            <ToolCard tool={tool} onEdit={() => setEditingTool(tool)} />
-          </li>
-        ))}
-      </ul>
+      {tools.length === 0 ? (
+        <p className="text-center text-muted-foreground">
+          Add a tool to get started
+        </p>
+      ) : (
+        <ul className="grid gap-4">
+          {tools.map((tool) => (
+            <li key={tool.id}>
+              <ToolCard tool={tool} onEdit={() => setEditingTool(tool)} />
+            </li>
+          ))}
+        </ul>
+      )}
     </section>
   )
 }
@@ -691,6 +697,7 @@ export function DeleteServerSection({
             </Button>
           </AlertDialogTrigger>
           <AlertDialogContent>
+            Tools
             <AlertDialogHeader>
               <AlertDialogTitle>Confirm Server Deletion</AlertDialogTitle>
               <AlertDialogDescription className="space-y-2">
