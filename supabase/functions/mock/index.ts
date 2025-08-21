@@ -8,6 +8,9 @@ import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { createClient } from "@supabase/supabase-js";
 import { createMcpHandler } from "mcp-handler";
 import { z } from "zod";
+import { generateText } from "ai";
+import { openai } from "@ai-sdk/openai";
+import dedent from "dedent";
 
 import type { Database } from "@/database.types.ts";
 
@@ -69,28 +72,6 @@ Deno.serve(async (req) => {
 
   const handler = createMcpHandler(
     (server) => {
-      server.tool(
-        "debug",
-        "For debugging",
-        {
-          string: z.string().describe("A string"),
-          boolean: z.boolean().describe("A boolean"),
-          number: z.number(),
-          email: z.string().email(),
-          enum: z.enum(["red", "green", "blue"]),
-        },
-        (params) => {
-          return {
-            content: [{
-              type: "text",
-              text: `Mock response for tool "debug" with params: ${
-                JSON.stringify(params)
-              }`,
-            }],
-          };
-        },
-      );
-
       for (const tool of $server.data.tools) {
         const paramsSchema = Object.fromEntries(
           tool.parameters.map((p) => {
@@ -104,14 +85,34 @@ Deno.serve(async (req) => {
           tool.name,
           tool.description,
           paramsSchema,
-          (params) => {
+          async (params) => {
             // Simulate a mock response
+            const { text } = await generateText({
+              model: openai("gpt-4o"),
+              system: dedent`
+                You are a mock MCP server (though you shouldn't reference this in your response).
+                You receive a tool call, and you must compute a reasonable return value exactly as if you were a computer program implementation.
+                Usually this will be plain text, but it could contain JSON.
+              `,
+              prompt: JSON.stringify({
+                server_name: $server.data.name,
+                tool_name: tool.name,
+                tool_description: tool.description,
+                tool_parameters: tool.parameters.map((parameter) => {
+                  const value = params[parameter.name];
+                  return {
+                    name: parameter.name,
+                    description: parameter.description,
+                    value,
+                  };
+                }),
+              }),
+            });
+
             return {
               content: [{
                 type: "text",
-                text: `Mock response for tool "${tool.name}" with params: ${
-                  JSON.stringify(params)
-                }`,
+                text,
               }],
             };
           },

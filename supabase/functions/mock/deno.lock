@@ -1,12 +1,47 @@
 {
   "version": "5",
   "specifiers": {
+    "npm:@ai-sdk/openai@^2.0.0-beta.16": "2.0.18_zod@3.25.76",
     "npm:@modelcontextprotocol/sdk@^1.17.3": "1.17.3_express@5.1.0_zod@3.25.76",
     "npm:@supabase/supabase-js@^2.55.0": "2.55.0",
+    "npm:ai@^5.0.0-beta.34": "5.0.20_zod@3.25.76",
+    "npm:dedent@^1.6.0": "1.6.0",
     "npm:mcp-handler@^1.0.1": "1.0.1_@modelcontextprotocol+sdk@1.17.3__express@5.1.0__zod@3.25.76",
     "npm:zod@^3.25.76": "3.25.76"
   },
   "npm": {
+    "@ai-sdk/gateway@1.0.9_zod@3.25.76": {
+      "integrity": "sha512-kIfwunyUUwyBLg2KQcaRtjRQ1bDuJYPNIs4CNWaWPpMZ4SV5cRL1hLGMuX4bhfCJYDXHMGvJGLtUK6+iAJH2ZQ==",
+      "dependencies": [
+        "@ai-sdk/provider",
+        "@ai-sdk/provider-utils",
+        "zod"
+      ]
+    },
+    "@ai-sdk/openai@2.0.18_zod@3.25.76": {
+      "integrity": "sha512-KmDOPJGJ+bAyoaToltQvdUL+pqkcW5Ez6ipOvAi3cdx7VTjnrcjcKss2hZIBKa+N5tVPfjto3rAerM2sx5hVJQ==",
+      "dependencies": [
+        "@ai-sdk/provider",
+        "@ai-sdk/provider-utils",
+        "zod"
+      ]
+    },
+    "@ai-sdk/provider-utils@3.0.4_zod@3.25.76": {
+      "integrity": "sha512-/3Z6lfUp8r+ewFd9yzHkCmPlMOJUXup2Sx3aoUyrdXLhOmAfHRl6Z4lDbIdV0uvw/QYoBcVLJnvXN7ncYeS3uQ==",
+      "dependencies": [
+        "@ai-sdk/provider",
+        "@standard-schema/spec",
+        "eventsource-parser",
+        "zod",
+        "zod-to-json-schema"
+      ]
+    },
+    "@ai-sdk/provider@2.0.0": {
+      "integrity": "sha512-6o7Y2SeO9vFKB8lArHXehNuusnpddKPk7xqL7T2/b+OvXMRIXUO1rR4wcv1hAFUAT9avGZshty3Wlua/XA7TvA==",
+      "dependencies": [
+        "json-schema"
+      ]
+    },
     "@modelcontextprotocol/sdk@1.17.3_express@5.1.0_zod@3.25.76": {
       "integrity": "sha512-JPwUKWSsbzx+DLFznf/QZ32Qa+ptfbUlHhRLrBQBAFu9iI1iYvizM4p+zhhRDceSsPutXp4z+R/HPVphlIiclg==",
       "dependencies": [
@@ -23,6 +58,9 @@
         "zod",
         "zod-to-json-schema"
       ]
+    },
+    "@opentelemetry/api@1.9.0": {
+      "integrity": "sha512-3giAOQvZiH5F9bMlMiv8+GSPMeqg0dbaeo58/0SlA9sxSqZhnUtxzX9/2FzyhS9sWQf5S0GJE0AKBrFqjpeYcg=="
     },
     "@redis/bloom@1.2.0_@redis+client@1.6.1": {
       "integrity": "sha512-HG2DFjYKbpNmVXsa0keLHp/3leGJz1mjh09f2RLGGLQZzSHpkmZWuwJbAvo3QcRY8p80m5+ZdXZdYOSBLlp7Cg==",
@@ -61,6 +99,9 @@
       "dependencies": [
         "@redis/client"
       ]
+    },
+    "@standard-schema/spec@1.0.0": {
+      "integrity": "sha512-m2bOd0f2RT9k8QJx1JN85cZYyH1RqFBdlwtkSlf4tBDYLCiiZnv1fIIwacK6cqwXavOydf0NPToMQgpKq+dVlA=="
     },
     "@supabase/auth-js@2.71.1": {
       "integrity": "sha512-mMIQHBRc+SKpZFRB2qtupuzulaUhFYupNyxqDj5Jp/LyPvcWvjaJzZzObv6URtL/O6lPxkanASnotGtNpS3H2Q==",
@@ -132,6 +173,16 @@
       "dependencies": [
         "mime-types",
         "negotiator"
+      ]
+    },
+    "ai@5.0.20_zod@3.25.76": {
+      "integrity": "sha512-zesSsm03ELeiqwU63IP8grTWuWtywil+XqA+64/8ALUVbsuCt/4fj7Sdk0G/k4f7oSo31lIVAdlj6rzx7d0GhQ==",
+      "dependencies": [
+        "@ai-sdk/gateway",
+        "@ai-sdk/provider",
+        "@ai-sdk/provider-utils",
+        "@opentelemetry/api",
+        "zod"
       ]
     },
     "ajv@6.12.6": {
@@ -218,6 +269,9 @@
       "dependencies": [
         "ms"
       ]
+    },
+    "dedent@1.6.0": {
+      "integrity": "sha512-F1Z+5UCFpmQUzJa11agbyPVMbpgT/qA3/SKyJ1jyBgm7dUcUEa8v9JwDkerSQXfakBwFljIxhOJqGkjUwZ9FSA=="
     },
     "depd@2.0.0": {
       "integrity": "sha512-g7nH6P6dyDioJogAAGprGpCtVImJhpPk/roCzdb3fIh61/s/nPsfR6onyMwkCAR/OlC3yBC0lESvUoQEAssIrw=="
@@ -394,6 +448,9 @@
     },
     "json-schema-traverse@0.4.1": {
       "integrity": "sha512-xbbCH5dCYU5T8LcEhhuh7HJ88HXuW3qsI3Y0zOZFKfZEHcpWiHU/Jxzk629Brsab/mMiHQti9wMP+845RPe3Vg=="
+    },
+    "json-schema@0.4.0": {
+      "integrity": "sha512-es94M3nTIfsEPisRafak+HDLfHXnKBhV3vU5eqPcS3flIWqcxJWgXHXiey3YrpaNsanY5ei1VoYEbOzijuq9BA=="
     },
     "math-intrinsics@1.1.0": {
       "integrity": "sha512-/IXtbwEk5HTPyEwyKX6hGkYXxM9nbj64B+ilVJnC/R6B0pH5G4V3b0pVbL7DBj4tkhBAppbQUlf6F6Xl9LHu1g=="
@@ -660,8 +717,11 @@
   },
   "workspace": {
     "dependencies": [
+      "npm:@ai-sdk/openai@^2.0.0-beta.16",
       "npm:@modelcontextprotocol/sdk@^1.17.3",
       "npm:@supabase/supabase-js@^2.55.0",
+      "npm:ai@^5.0.0-beta.34",
+      "npm:dedent@^1.6.0",
       "npm:mcp-handler@^1.0.1",
       "npm:zod@^3.25.76"
     ]

@@ -1,8 +1,11 @@
 {
   "imports": {
     "@/": "../../../",
+    "@ai-sdk/openai": "npm:@ai-sdk/openai@^2.0.0-beta.16",
     "@modelcontextprotocol/sdk": "npm:@modelcontextprotocol/sdk@^1.17.3",
     "@supabase/supabase-js": "npm:@supabase/supabase-js@^2.55.0",
+    "ai": "npm:ai@^5.0.0-beta.34",
+    "dedent": "npm:dedent@^1.6.0",
     "mcp-handler": "npm:mcp-handler@^1.0.1",
     "zod": "npm:zod@^3.25.76"
   }

@@ -9,7 +9,7 @@
     "lint": "next lint",
     "supabase:start": "supabase start",
     "supabase:stop": "supabase stop",
-    "supabase:functions": "supabase functions serve",
+    "supabase:functions": "supabase functions serve --env-file .env.local",
     "supabase:gen": "supabase gen types typescript --local > database.types.ts",
     "supabase:apply-migrations": "supabase migration up --local && pnpm supabase:gen",
     "mcp:inspector": "mcp-inspector",
