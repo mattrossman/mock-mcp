@@ -19,7 +19,7 @@ export default async function ServerPage({
 
   const $server = await client
     .from("servers")
-    .select("*, tools(*)")
+    .select("*, tools(*, parameters(*))")
     .eq("id", serverId)
     .single()
 
