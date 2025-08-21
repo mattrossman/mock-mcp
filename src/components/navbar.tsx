@@ -4,7 +4,6 @@ import Image from "next/image"
 import { createClient } from "@/lib/supabase/server"
 import { cn } from "@/lib/utils"
 import z from "zod"
-import { CopyToken } from "@/components/copy-token"
 
 const ClaimsSchema = z.object({
   email: z.string().email(),
@@ -42,7 +41,6 @@ export async function Navbar({ className }: { className?: string }) {
 
       {userData && (
         <div className="flex gap-6 items-center">
-          <CopyToken token={userData.accessToken} />
           <span className="text-muted-foreground text-sm">
             {userData.email}
           </span>

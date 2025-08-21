@@ -1,6 +1,6 @@
 "use client"
 
-import { Plus } from "lucide-react"
+import { Plus, Plug } from "lucide-react"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
@@ -34,6 +34,8 @@ import { useState } from "react"
 import { Database } from "../../../database.types"
 import { createClient } from "@/lib/supabase/client"
 import { useRouter } from "next/navigation"
+import { CodeBlock } from "@/components/code-block"
+import { getServerUrl } from "@/lib/get-server-url"
 
 type ToolsRow = Database["public"]["Tables"]["tools"]["Row"]
 type ParametersRow = Database["public"]["Tables"]["parameters"]["Row"]
@@ -430,6 +432,95 @@ export function ParameterForm({
             <Button type="submit">Submit</Button>
           </form>
         </Form>
+      </DialogContent>
+    </Dialog>
+  )
+}
+
+export function ConnectButton({
+  serverId,
+  accessToken,
+}: {
+  serverId: string
+  accessToken: string
+}) {
+  const [open, setOpen] = useState(false)
+
+  return (
+    <>
+      <Button
+        onClick={() => setOpen(true)}
+        className="flex items-center gap-2"
+        variant="outline"
+      >
+        <Plug className="h-4 w-4" />
+        Connect
+      </Button>
+      <ConnectDialog
+        serverId={serverId}
+        accessToken={accessToken}
+        open={open}
+        onOpenChange={setOpen}
+      />
+    </>
+  )
+}
+
+export function ConnectDialog({
+  serverId,
+  accessToken,
+  open,
+  onOpenChange,
+}: {
+  serverId: string
+  accessToken: string
+  open: boolean
+  onOpenChange: (open: boolean) => void
+}) {
+  const serverUrl = getServerUrl(serverId)
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-2xl">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2">
+            <Plug className="h-5 w-5" />
+            Connect to Server
+          </DialogTitle>
+          <DialogDescription>
+            Use these credentials to connect your MCP client to this server.
+          </DialogDescription>
+        </DialogHeader>
+
+        <div className="grid gap-6">
+          <div className="min-w-0">
+            <h4 className="text-sm font-medium mb-2">Server URL</h4>
+            <CodeBlock className="min-w-0" code={serverUrl} />
+          </div>
+
+          <div className="min-w-0">
+            <h4 className="text-sm font-medium mb-2">Bearer Token</h4>
+            <CodeBlock className="min-w-0" code={accessToken} />
+          </div>
+
+          <div className="bg-card rounded-lg p-4">
+            <h4 className="text-sm font-medium mb-2">
+              Connection Instructions
+            </h4>
+            <div className="text-sm text-muted-foreground space-y-2">
+              <p>In your MCP client (e.g. Cursor, Claude Code, VS Code):</p>
+              <p>1. Copy the URL and set it as the remote server URL</p>
+              <p>{`2. Copy the token and add it an "Authorization" header with the value "Bearer <TOKEN>"`}</p>
+              <p>
+                3. Connect to the server and try using your configured tools!
+              </p>
+              <p className="text-xs italic mt-3">
+                Note: Tokens expire after 1 week, so you may need to copy it
+                again later
+              </p>
+            </div>
+          </div>
+        </div>
       </DialogContent>
     </Dialog>
   )

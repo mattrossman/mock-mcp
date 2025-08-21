@@ -1,12 +1,10 @@
 import { ChevronLeft } from "lucide-react"
 import Link from "next/link"
-import { notFound } from "next/navigation"
+import { notFound, redirect } from "next/navigation"
 
-import { CodeBlock } from "@/components/code-block"
 import { Button } from "@/components/ui/button"
-import { getServerUrl } from "@/lib/get-server-url"
 import { createClient } from "@/lib/supabase/server"
-import { ToolSection } from "@/app/[serverId]/client"
+import { ToolSection, ConnectButton } from "@/app/[serverId]/client"
 
 export default async function ServerPage({
   params,
@@ -16,6 +14,14 @@ export default async function ServerPage({
   const client = await createClient()
 
   const { serverId } = await params
+
+  // Get user session for access token
+  const $session = await client.auth.getSession()
+  const accessToken = $session.data.session?.access_token
+
+  if (!accessToken) {
+    redirect("/auth/login")
+  }
 
   const $server = await client
     .from("servers")
@@ -43,10 +49,11 @@ export default async function ServerPage({
           </Button>
         </div>
 
-        <h1 className="text-2xl font-bold mb-10 grow">{server.name}</h1>
+        <div className="flex items-center justify-between mb-10">
+          <h1 className="text-2xl font-bold grow">{server.name}</h1>
+          <ConnectButton serverId={server.id} accessToken={accessToken} />
+        </div>
       </header>
-
-      <CodeBlock label="URL" code={getServerUrl(server.id)} />
 
       <ToolSection serverId={server.id} tools={server.tools} />
     </div>
