@@ -4,7 +4,11 @@ import { notFound, redirect } from "next/navigation"
 
 import { Button } from "@/components/ui/button"
 import { createClient } from "@/lib/supabase/server"
-import { ToolSection, ConnectButton } from "@/app/[serverId]/client"
+import {
+  ToolSection,
+  ConnectButton,
+  ServerHeader,
+} from "@/app/[serverId]/client"
 
 export default async function ServerPage({
   params,
@@ -50,7 +54,7 @@ export default async function ServerPage({
         </div>
 
         <div className="flex items-center justify-between mb-10">
-          <h1 className="text-2xl font-bold grow">{server.name}</h1>
+          <ServerHeader server={server} />
           <ConnectButton serverId={server.id} accessToken={accessToken} />
         </div>
       </header>

@@ -1,6 +1,6 @@
 "use client"
 
-import { Plus, Plug } from "lucide-react"
+import { Plus, Plug, Edit } from "lucide-react"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
@@ -255,8 +255,8 @@ export function ToolCard({
           )}
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="outline" onClick={onEdit}>
-            Edit
+          <Button variant="ghost" onClick={onEdit}>
+            <Edit className="h-4 w-4" />
           </Button>
           <Button variant="destructive" onClick={() => deleteTool(tool.id)}>
             Delete
@@ -301,7 +301,7 @@ export function ToolCard({
                     variant="ghost"
                     onClick={() => setEditingParameter(parameter)}
                   >
-                    Edit
+                    <Edit className="h-3 w-3" />
                   </Button>
                   <Button
                     size="sm"
@@ -521,6 +521,117 @@ export function ConnectDialog({
             </div>
           </div>
         </div>
+      </DialogContent>
+    </Dialog>
+  )
+}
+
+type UpsertServerData = {
+  id?: string
+  name: string
+}
+
+export function ServerHeader({
+  server,
+}: {
+  server: Database["public"]["Tables"]["servers"]["Row"]
+}) {
+  const supabase = createClient()
+  const router = useRouter()
+  const [editingServer, setEditingServer] = useState<UpsertServerData>()
+
+  const handleUpsertServer = async (data: UpsertServerData) => {
+    await supabase.from("servers").upsert({ ...data })
+    router.refresh()
+    setEditingServer(undefined)
+  }
+
+  const handleRename = () => {
+    setEditingServer({
+      id: server.id,
+      name: server.name,
+    })
+  }
+
+  return (
+    <>
+      {editingServer && (
+        <ServerForm
+          defaultValues={editingServer}
+          onServerChange={(values) => {
+            handleUpsertServer({ id: editingServer.id, ...values })
+          }}
+          onOpenChange={(open) => {
+            if (!open) {
+              setEditingServer(undefined)
+            }
+          }}
+        />
+      )}
+
+      <div className="flex items-center gap-3">
+        <h1 className="text-2xl font-bold grow">{server.name}</h1>
+        <Button variant="ghost" size="sm" onClick={handleRename}>
+          <Edit className="h-4 w-4" />
+        </Button>
+      </div>
+    </>
+  )
+}
+
+const serverFormSchema = z.object({
+  name: z.string().min(1, {
+    message: "Name must be at least 1 character.",
+  }),
+})
+
+export function ServerForm({
+  defaultValues,
+  onServerChange,
+  onOpenChange,
+}: {
+  defaultValues: UpsertServerData
+  onServerChange?: (values: z.infer<typeof serverFormSchema>) => void
+  onOpenChange?: (open: boolean) => void
+}) {
+  const form = useForm<z.infer<typeof serverFormSchema>>({
+    resolver: zodResolver(serverFormSchema),
+    defaultValues,
+  })
+
+  const onSubmit = (values: z.infer<typeof serverFormSchema>) => {
+    onServerChange?.(values)
+  }
+
+  return (
+    <Dialog open onOpenChange={onOpenChange}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Rename server</DialogTitle>
+          <DialogDescription>Update the server name.</DialogDescription>
+        </DialogHeader>
+
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="My Server" {...field} />
+                  </FormControl>
+                  <FormDescription>
+                    A descriptive name for your server.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Button type="submit">Update</Button>
+          </form>
+        </Form>
       </DialogContent>
     </Dialog>
   )
