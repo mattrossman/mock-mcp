@@ -716,19 +716,21 @@ export function DeleteServerSection({
             Tools
             <AlertDialogHeader>
               <AlertDialogTitle>Confirm Server Deletion</AlertDialogTitle>
-              <AlertDialogDescription className="space-y-2">
-                <p>
-                  Are you sure you want to delete the server{" "}
-                  <strong>{server.name}</strong>?
-                </p>
-                {server.tools && server.tools.length > 0 ? (
+              <AlertDialogDescription asChild>
+                <div className="space-y-2">
                   <p>
-                    This will also delete {server.tools.length} tool
-                    {server.tools.length === 1 ? "" : "s"}.
+                    Are you sure you want to delete the server{" "}
+                    <strong>{server.name}</strong>?
                   </p>
-                ) : (
-                  <p>This server has no tools.</p>
-                )}
+                  {server.tools && server.tools.length > 0 ? (
+                    <p>
+                      This will also delete {server.tools.length} tool
+                      {server.tools.length === 1 ? "" : "s"}.
+                    </p>
+                  ) : (
+                    <p>This server has no tools.</p>
+                  )}
+                </div>
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
