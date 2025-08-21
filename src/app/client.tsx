@@ -1,5 +1,5 @@
 "use client"
-import { Plus, Edit } from "lucide-react"
+import { Plus, ChevronRight } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
@@ -9,17 +9,6 @@ import { useForm } from "react-hook-form"
 
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
 import {
   Dialog,
   DialogContent,
@@ -53,52 +42,21 @@ export function ServerCard({
     tools: { name: string }[]
   }
 }) {
-  const supabase = createClient()
-  const router = useRouter()
-  const [editingServer, setEditingServer] = useState<UpsertServerData>()
-
-  const handleDelete = async (serverId: string) => {
-    await supabase.from("servers").delete().eq("id", serverId)
-    router.refresh()
-  }
-
-  const handleUpsertServer = async (data: UpsertServerData) => {
-    await supabase.from("servers").upsert({ ...data })
-    router.refresh()
-    setEditingServer(undefined)
-  }
-
-  const handleRename = () => {
-    setEditingServer({
-      id: server.id,
-      name: server.name,
-    })
-  }
-
   const maxToolsToShow = 4
   const toolsToShow = server.tools.slice(0, maxToolsToShow)
   const remainingTools = server.tools.slice(maxToolsToShow)
   const remainingToolsCount = remainingTools.length
 
   return (
-    <div className="bg-card border rounded-md px-6 py-6">
-      {editingServer && (
-        <ServerForm
-          defaultValues={editingServer}
-          onServerChange={(values) => {
-            handleUpsertServer({ id: editingServer.id, ...values })
-          }}
-          onOpenChange={(open) => {
-            if (!open) {
-              setEditingServer(undefined)
-            }
-          }}
-        />
-      )}
-
+    <Link
+      href={`/${server.id}`}
+      className="group block bg-card border rounded-md px-6 py-6 hover:bg-accent/50 hover:border-accent-foreground/20 hover:shadow-md transition-all duration-200 cursor-pointer"
+    >
       <div className="flex items-start justify-between">
         <div className="flex-1 min-w-0">
-          <h3 className="font-medium text-lg mb-2">{server.name}</h3>
+          <h3 className="font-medium text-lg mb-2 group-hover:text-foreground transition-colors">
+            {server.name}
+          </h3>
           {server.tools.length > 0 && (
             <div className="flex flex-wrap gap-1.5">
               {toolsToShow.map((tool, index) => (
@@ -121,46 +79,11 @@ export function ServerCard({
             <p className="text-sm text-muted-foreground">No tools configured</p>
           )}
         </div>
-        <div className="flex items-center gap-2 ml-4">
-          <Button variant="ghost" size="sm" onClick={handleRename}>
-            <Edit className="h-4 w-4" />
-          </Button>
-          <Button variant="outline" asChild>
-            <Link href={`/${server.id}`}>Manage</Link>
-          </Button>
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button variant="destructive">Delete</Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Confirm Server Deletion</AlertDialogTitle>
-                <AlertDialogDescription className="space-y-2">
-                  <p>
-                    Are you sure you want to delete the server{" "}
-                    <strong>{server.name}</strong>?
-                  </p>
-                  {server.tools.length > 0 ? (
-                    <p>
-                      This will also delete {server.tools.length} tool
-                      {server.tools.length === 1 ? "" : "s"}.
-                    </p>
-                  ) : (
-                    <p>This server has no tools.</p>
-                  )}
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction onClick={() => handleDelete(server.id)}>
-                  Delete Server
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
+        <div className="flex items-center ml-4 text-muted-foreground group-hover:text-foreground transition-colors">
+          <ChevronRight className="h-5 w-5" />
         </div>
       </div>
-    </div>
+    </Link>
   )
 }
 

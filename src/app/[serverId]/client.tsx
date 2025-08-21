@@ -1,11 +1,23 @@
 "use client"
 
-import { Plus, Plug, Edit } from "lucide-react"
+import { Plus, Plug, Edit, Trash2 } from "lucide-react"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 
 import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
 import {
   Dialog,
   DialogContent,
@@ -255,11 +267,16 @@ export function ToolCard({
           )}
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="ghost" onClick={onEdit}>
+          <Button variant="outline" size="sm" onClick={onEdit}>
             <Edit className="h-4 w-4" />
           </Button>
-          <Button variant="destructive" onClick={() => deleteTool(tool.id)}>
-            Delete
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => deleteTool(tool.id)}
+            className="text-destructive hover:text-destructive hover:bg-destructive/10"
+          >
+            <Trash2 className="h-4 w-4" />
           </Button>
         </div>
       </div>
@@ -282,33 +299,38 @@ export function ToolCard({
             {tool.parameters.map((parameter) => (
               <div
                 key={parameter.id}
-                className="flex items-center justify-between bg-muted/50 rounded p-2"
+                className="flex items-center justify-between bg-muted/50 rounded-sm p-4"
               >
-                <div>
-                  <span className="font-mono text-sm">{parameter.name}</span>
-                  <span className="ml-2 text-xs bg-secondary px-1.5 py-0.5 rounded">
-                    {parameter.type}
-                  </span>
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="font-medium text-sm">
+                      {parameter.name}
+                    </span>
+                    <Badge variant="outline" className="text-xs">
+                      {parameter.type}
+                    </Badge>
+                  </div>
                   {parameter.description && (
-                    <p className="text-xs text-muted-foreground mt-1">
+                    <p className="text-xs text-muted-foreground">
                       {parameter.description}
                     </p>
                   )}
                 </div>
-                <div className="flex items-center gap-1">
+                <div className="flex items-center gap-2">
                   <Button
                     size="sm"
-                    variant="ghost"
+                    variant="outline"
                     onClick={() => setEditingParameter(parameter)}
                   >
                     <Edit className="h-3 w-3" />
                   </Button>
                   <Button
                     size="sm"
-                    variant="ghost"
+                    variant="outline"
                     onClick={() => deleteParameter(parameter.id)}
+                    className="text-destructive hover:text-destructive hover:bg-destructive/10"
                   >
-                    Delete
+                    <Trash2 className="h-3 w-3" />
                   </Button>
                 </div>
               </div>
@@ -632,5 +654,72 @@ export function ServerForm({
         </Form>
       </DialogContent>
     </Dialog>
+  )
+}
+
+export function DeleteServerSection({
+  server,
+}: {
+  server: Database["public"]["Tables"]["servers"]["Row"] & {
+    tools?: { name: string }[]
+  }
+}) {
+  const supabase = createClient()
+  const router = useRouter()
+
+  const handleDelete = async () => {
+    await supabase.from("servers").delete().eq("id", server.id)
+    router.push("/")
+  }
+
+  return (
+    <section className="mt-16 pt-8 border-t">
+      <div className="bg-destructive/5 border border-destructive/20 rounded-lg p-6">
+        <h3 className="text-lg font-semibold text-destructive mb-2">
+          Delete Server
+        </h3>
+        <p className="text-sm text-muted-foreground mb-4">
+          Permanently delete this server and all its tools. This action cannot
+          be undone.
+        </p>
+
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button variant="destructive" className="flex items-center gap-2">
+              <Trash2 className="h-4 w-4" />
+              Delete Server
+            </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Confirm Server Deletion</AlertDialogTitle>
+              <AlertDialogDescription className="space-y-2">
+                <p>
+                  Are you sure you want to delete the server{" "}
+                  <strong>{server.name}</strong>?
+                </p>
+                {server.tools && server.tools.length > 0 ? (
+                  <p>
+                    This will also delete {server.tools.length} tool
+                    {server.tools.length === 1 ? "" : "s"}.
+                  </p>
+                ) : (
+                  <p>This server has no tools.</p>
+                )}
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction
+                onClick={handleDelete}
+                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              >
+                Delete Server
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      </div>
+    </section>
   )
 }

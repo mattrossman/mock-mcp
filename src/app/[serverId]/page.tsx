@@ -8,6 +8,7 @@ import {
   ToolSection,
   ConnectButton,
   ServerHeader,
+  DeleteServerSection,
 } from "@/app/[serverId]/client"
 
 export default async function ServerPage({
@@ -60,6 +61,8 @@ export default async function ServerPage({
       </header>
 
       <ToolSection serverId={server.id} tools={server.tools} />
+
+      <DeleteServerSection server={server} />
     </div>
   )
 }
