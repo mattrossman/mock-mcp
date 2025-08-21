@@ -35,7 +35,7 @@ export default function RootLayout({
           defaultTheme="dark"
           disableTransitionOnChange
         >
-          <Navbar className="fixed h-16 px-8" />
+          <Navbar className="fixed h-16 px-8 z-10" />
           <main className="mx-auto max-w-4xl min-h-full h-full px-4 pt-16">
             {children}
           </main>

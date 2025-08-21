@@ -4,6 +4,7 @@ import Image from "next/image"
 import { createClient } from "@/lib/supabase/server"
 import { cn } from "@/lib/utils"
 import z from "zod"
+import Link from "next/link"
 
 const ClaimsSchema = z.object({
   email: z.string().email(),
@@ -34,10 +35,10 @@ export async function Navbar({ className }: { className?: string }) {
 
   return (
     <nav className={cn("flex w-full bg-background border-b", className)}>
-      <div className="flex items-center gap-2 grow">
+      <Link href="/" className="flex items-center gap-2 grow">
         <Image src={icon} alt="MockMCP logo" className="h-6 w-6" />
         <span className="text-xl font-bold">MockMCP</span>
-      </div>
+      </Link>
 
       {userData && (
         <div className="flex gap-6 items-center">
