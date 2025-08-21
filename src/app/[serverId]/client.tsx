@@ -493,15 +493,13 @@ export function ConnectDialog({
         </DialogHeader>
 
         <div className="grid gap-6">
-          <div className="min-w-0">
-            <h4 className="text-sm font-medium mb-2">Server URL</h4>
-            <CodeBlock className="min-w-0" code={serverUrl} />
-          </div>
+          <CodeBlock className="min-w-0" code={serverUrl} label="URL" />
 
-          <div className="min-w-0">
-            <h4 className="text-sm font-medium mb-2">Bearer Token</h4>
-            <CodeBlock className="min-w-0" code={accessToken} />
-          </div>
+          <CodeBlock
+            className="min-w-0"
+            code={accessToken}
+            label="Bearer Token"
+          />
 
           <div className="bg-card rounded-lg p-4">
             <h4 className="text-sm font-medium mb-2">
