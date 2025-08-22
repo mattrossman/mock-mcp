@@ -2,7 +2,8 @@ create table tools (
   id uuid primary key default uuid_generate_v4(),
   server_id uuid not null references servers(id) on delete cascade,
   name text not null,
-  description text not null default ''
+  description text not null default '',
+  prompt text not null default ''
 );
 
 alter table "tools"

@@ -92,18 +92,21 @@ export type Database = {
           description: string
           id: string
           name: string
+          prompt: string
           server_id: string
         }
         Insert: {
           description?: string
           id?: string
           name: string
+          prompt?: string
           server_id: string
         }
         Update: {
           description?: string
           id?: string
           name?: string
+          prompt?: string
           server_id?: string
         }
         Relationships: [
