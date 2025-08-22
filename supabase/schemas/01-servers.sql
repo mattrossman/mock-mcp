@@ -13,20 +13,20 @@ enable row level security;
 create policy "Users can view their own servers."
 on servers for select
 to authenticated
-using ( auth.uid() = user_id );
+using ( (select auth.uid()) = user_id );
 
 create policy "Users can create a server."
 on servers for insert
 to authenticated
-with check ( auth.uid() = user_id );
+with check ( (select auth.uid()) = user_id );
 
 create policy "Users can update their own servers."
 on servers for update
 to authenticated
-using ( auth.uid() = user_id )
-with check ( auth.uid() = user_id );
+using ( (select auth.uid()) = user_id )
+with check ( (select auth.uid()) = user_id );
 
 create policy "Users can delete their own server."
 on servers for delete
 to authenticated 
-using ( auth.uid() = user_id );
+using ( (select auth.uid()) = user_id );
