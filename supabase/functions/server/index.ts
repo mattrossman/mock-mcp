@@ -105,6 +105,7 @@ Deno.serve(async (req) => {
                     value,
                   };
                 }),
+                tool_prompt: tool.prompt,
               }),
             });
 

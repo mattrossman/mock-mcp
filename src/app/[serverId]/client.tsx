@@ -1,6 +1,6 @@
 "use client"
 
-import { Plus, Plug, Edit, Trash2 } from "lucide-react"
+import { Plus, Plug, Edit, Trash2, Sparkles } from "lucide-react"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
@@ -57,6 +57,7 @@ type UpsertToolData = {
   id?: string // Omitted if we're adding a new row
   name: string
   description: string
+  prompt: string
 }
 
 type UpsertParameterData = {
@@ -88,6 +89,7 @@ export function ToolSection({
     setEditingTool({
       name: "",
       description: "",
+      prompt: "",
     })
   }
 
@@ -122,7 +124,17 @@ export function ToolSection({
         <ul className="grid gap-4">
           {tools.map((tool) => (
             <li key={tool.id}>
-              <ToolCard tool={tool} onEdit={() => setEditingTool(tool)} />
+              <ToolCard
+                tool={tool}
+                onEdit={() =>
+                  setEditingTool({
+                    id: tool.id,
+                    name: tool.name,
+                    description: tool.description,
+                    prompt: tool.prompt,
+                  })
+                }
+              />
             </li>
           ))}
         </ul>
@@ -136,6 +148,7 @@ const toolFormSchema = z.object({
     message: "Name must be at least 1 character.",
   }),
   description: z.string(),
+  prompt: z.string(),
 })
 
 export function ToolForm({
@@ -209,6 +222,28 @@ export function ToolForm({
                 </FormItem>
               )}
             />
+            <FormField
+              control={form.control}
+              name="prompt"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="flex items-center gap-2">
+                    <Sparkles className="h-4 w-4 text-accent-foreground" />
+                    Prompt (Optional)
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Respond in plain text with ..."
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormDescription>
+                    Additional context for generating mock tool call results.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <Button type="submit">Submit</Button>
           </form>
         </Form>
@@ -274,6 +309,14 @@ export function ToolCard({
           <h3 className="font-semibold">{tool.name}</h3>
           {tool.description && (
             <p className="text-sm text-muted-foreground">{tool.description}</p>
+          )}
+          {tool.prompt && (
+            <div className="flex items-center gap-2 mt-2">
+              <Sparkles className="h-3 w-3 text-accent-foreground" />
+              <p className="text-xs text-muted-foreground italic">
+                Prompt: {tool.prompt}
+              </p>
+            </div>
           )}
         </div>
         <div className="flex items-center gap-2">
