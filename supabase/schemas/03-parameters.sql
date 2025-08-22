@@ -27,7 +27,7 @@ using (
     where server_id in (
       select id
       from servers
-      where user_id = auth.uid()
+      where (select auth.uid()) = user_id
     )
   )
 );
@@ -42,7 +42,7 @@ with check (
     where server_id in (
       select id
       from servers
-      where user_id = auth.uid()
+      where (select auth.uid()) = user_id
     )
   )
 );
@@ -57,7 +57,7 @@ using (
     where server_id in (
       select id
       from servers
-      where user_id = auth.uid()
+      where (select auth.uid()) = user_id
     )
   )
 )
@@ -68,7 +68,7 @@ with check (
     where server_id in (
       select id
       from servers
-      where user_id = auth.uid()
+      where (select auth.uid()) = user_id
     )
   )
 );
@@ -83,7 +83,7 @@ using (
     where server_id in (
       select id
       from servers
-      where user_id = auth.uid()
+      where (select auth.uid()) = user_id
     )
   )
 );
