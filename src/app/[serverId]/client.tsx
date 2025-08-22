@@ -236,6 +236,12 @@ export function ToolForm({
                     <Textarea
                       placeholder="Respond in plain text with ..."
                       {...field}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" && !e.shiftKey) {
+                          e.preventDefault()
+                          form.handleSubmit(onSubmit)()
+                        }
+                      }}
                     />
                   </FormControl>
                   <FormDescription>
