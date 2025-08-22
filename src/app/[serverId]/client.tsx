@@ -35,6 +35,7 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
 import {
   Select,
   SelectContent,
@@ -232,7 +233,7 @@ export function ToolForm({
                     Prompt (Optional)
                   </FormLabel>
                   <FormControl>
-                    <Input
+                    <Textarea
                       placeholder="Respond in plain text with ..."
                       {...field}
                     />
